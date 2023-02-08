@@ -113,22 +113,22 @@ def A_search(ini, goal, h_func):
                 current = i
             elif fScore[i] < m:
                 m = fScore[i]
-                current = i
+                current = i #select the lowest f score as current
         
         if current == goal_state:
             return path_find(cameFrom, current)
 
-        openSet.remove(current)
+        openSet.remove(current) #remove it from openSet as it is exported
 
-        for neighbor in current.neighbors():
-            new_gScore = gScore[current] + 1
-            if (not( exist(gScore.keys(),neighbor) )) or (new_gScore < gScore[neighbor]):
-                cameFrom[neighbor] = current
-                gScore[neighbor] = new_gScore
-                fScore[neighbor] = new_gScore + h_func(neighbor)
+        for neighbor in current.neighbors(): #expand
+            new_gScore = gScore[current] + 1 #increase the g score associated with the current set
+            if (not( exist(gScore.keys(),neighbor) )) or (new_gScore < gScore[neighbor]): 
+                # if the new node from expand is not in the g score dict or the new g score is still lower than all the expanded node
+                cameFrom[neighbor] = current # for path checking
+                gScore[neighbor] = new_gScore #neightbor g score
+                fScore[neighbor] = new_gScore + h_func(neighbor) #neightbor f score
                 if (not( exist(openSet,neighbor) )):
-                    openSet.append(neighbor)
-
+                    openSet.append(neighbor) #Add the expanded node to the openset
 
     return None
 
@@ -185,12 +185,14 @@ def print_result(result):
 
 
 def main(file):
-    Goal = BoardState(read_state("goal_1.txt"))
-    Ini = BoardState(read_state(file))
+    start = ['7','2','4','5','0','6','8','3','1']
+    end = ['0','1','2','3','4','5','6','7','8']
+    Goal = BoardState(end)
+    Ini = BoardState(start)
     
     #1b part1
     print("A*Search - Misplacement:")
     print_result(A_search(Ini, Goal, h_misplace))
 
 
-main("input_1.txt")
+main("input.txt")
